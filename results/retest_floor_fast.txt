@@ -1,0 +1,21 @@
+
+==============================================================================
+ REVIEW -> RETEST under the null: P(eventually GO) vs. number of looks
+   n_trials=600, start_n=100, increment=100, B=800, true_p=0.7
+==============================================================================
+  up to  1 looks:   2.8% [ 1.7%,  4.5%]   (nominal single look: 2.5%)
+  up to  2 looks:   3.3% [ 2.0%,  5.1%]   (nominal single look: 2.5%)
+  up to  3 looks:   3.5% [ 2.2%,  5.3%]   (nominal single look: 2.5%)
+  up to  5 looks:   7.3% [ 5.4%,  9.7%]   (nominal single look: 2.5%)
+  up to 10 looks:  10.7% [ 8.3%, 13.4%]   (nominal single look: 2.5%)
+
+==============================================================================
+ Coverage of the nominal 95% percentile CI near the n=10 floor
+   n_trials=600, B=1000, binary=0.70 -> 0.75, lognormal=mu 0 -> 0.2, sigma 1
+==============================================================================
+  n=  10: binary  88.3% [85.5%, 90.8%]   lognormal  88.0% [85.1%, 90.5%]
+  n=  20: binary  92.3% [89.9%, 94.3%]   lognormal  88.7% [85.9%, 91.1%]
+  n=  30: binary  93.0% [90.7%, 94.9%]   lognormal  92.8% [90.5%, 94.8%]
+  n=  50: binary  93.7% [91.4%, 95.5%]   lognormal  91.3% [88.8%, 93.5%]
+  n= 100: binary  95.2% [93.1%, 96.7%]   lognormal  93.0% [90.7%, 94.9%]
+  n= 200: binary  93.2% [90.8%, 95.1%]   lognormal  94.0% [91.8%, 95.8%]

@@ -1,0 +1,50 @@
+data: C:\Users\stats\OneDrive\Desktop\AI_ROI_Validator_submission\data\mistral_v01_v02_paired.csv (29,978 paired questions)
+
+======================================================================================
+ A. Release review: Mistral-7B-Instruct v0.1 -> v0.2 (B=4000, BH, seed=1)
+======================================================================================
+  metric                n    v0.1    v0.2    lift   95% CI              verdict
+  ARC-Challenge      1172   0.545   0.631  +0.086   [+0.063, +0.109]   GO
+  HellaSwag         10042   0.756   0.849  +0.093   [+0.086, +0.099]   GO
+  MMLU              14042   0.537   0.592  +0.055   [+0.047, +0.063]   GO
+  Winogrande         1267   0.737   0.772  +0.035   [+0.013, +0.056]   GO
+  GSM8K              1319   0.143   0.400  +0.258   [+0.229, +0.287]   GO
+  GUARDRAIL TruthfulQA mc2 (must not drop > 0.02): v0.1 0.56 -> v0.2 0.68 (lift +0.12, one-sided bounds [+0.10, +0.14]) -> PASS
+  GUARDRAIL GSM8K answer length, words (must not grow > 2.9): v0.1 29.26 -> v0.2 57.87 (lift +28.62, one-sided bounds [+26.96, +30.29]) -> FAIL
+
+======================================================================================
+ B. Measured per-question correlation (v0.1 vs v0.2) and data needed for a +3pt effect
+======================================================================================
+  task                  n  Pearson r   n needed, r=0   n needed, measured r   saving
+  ARC-Challenge      1172       0.67           4,196                  1,387      67%
+  HellaSwag         10042       0.68           2,727                    911      67%
+  MMLU              14042       0.52           4,275                  2,056      52%
+  Winogrande         1267       0.57           3,228                  1,381      57%
+  GSM8K              1319       0.24           3,162                  2,437      23%
+  TruthfulQA mc2      817       0.64           3,320                  1,180      64%
+  (closed-form paired-difference sample size using each task's observed per-question
+   variances; 'r=0' is the independence assumption the TAE-2026 planner used)
+
+======================================================================================
+ C. 57 MMLU subjects as separate small evals (B=4000, seed=1)
+======================================================================================
+  subject sizes: min 100, median 173, max 1534
+  naive read ('number went up'): 48 up, 6 down, 3 unchanged
+  harness, each subject alone (no correction): {'GO': 21, 'REVIEW': 36, 'NO-GO': 0}
+  harness, all 57 as one batch (benjamini_hochberg): {'REVIEW': 43, 'GO': 14}
+  harness, all 57 as one batch (bonferroni): {'REVIEW': 48, 'GO': 9}
+
+======================================================================================
+ D. Small evals drawn from the full task (1000 draws per size, B=1000)
+======================================================================================
+  wrong direction = verdict/read says v0.2 is WORSE, although on the full task it is better
+
+  task         full lift     n  naive: up  naive: wrong dir  harness GO   REVIEW  NO-GO (wrong)
+  Winogrande      +0.035    50        67%               22%          6%      94%             0%
+  Winogrande      +0.035   100        78%               15%          8%      92%             0%
+  Winogrande      +0.035   200        88%                9%         16%      84%             0%
+  Winogrande      +0.035   500        99%                0%         44%      56%             0%
+  MMLU            +0.055    50        75%               16%          6%      93%             0%
+  MMLU            +0.055   100        83%               12%         14%      86%             0%
+  MMLU            +0.055   200        94%                5%         28%      72%             0%
+  MMLU            +0.055   500       100%                0%         70%      30%             0%

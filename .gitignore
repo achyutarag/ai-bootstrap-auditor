@@ -1,0 +1,10 @@
+# raw downloads (re-create with scripts/fetch_real_data.py)
+data/raw/
+# private: anonymized TAE-2026 submission ("Do not distribute") and reviewer comments
+*.pdf
+reviews/
+# local tooling and caches
+.claude/
+__pycache__/
+.pytest_cache/
+*.pyc

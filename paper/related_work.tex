@@ -1,0 +1,67 @@
+% Related work for the ICSE 2027 Tool Demonstration paper (answers TAE-2026 reviewers XfWC-W5, xSFC-W1).
+% Requires \usepackage{booktabs} and \bibliography{references}. Table uses only features each cited
+% source states; "--" means "not described in the cited source", not "impossible with the tool".
+
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Statistics for model evaluation.}
+Paired bootstrap and significance testing for comparing two systems on the same test items are
+long established in NLP~\cite{koehn2004significance,dror2018hitchhiker}, and underpowered
+comparisons are common~\cite{card2020power}. For language models, Miller~\cite{miller2024errorbars}
+recommends paired differences, clustered standard errors and power analysis, and Bowyer
+et~al.~\cite{bowyer2025clt} show that CLT-based error bars fail on benchmarks of fewer than a few
+hundred items---the regime our sample-floor and sign-test checks target. \emph{evalci}~\cite{evalci2026}
+packages paired tests, confidence intervals, power analysis and multiple-comparison correction for
+per-item LLM results; \emph{rliable}~\cite{agarwal2021precipice} provides stratified-bootstrap
+intervals for reinforcement-learning benchmarks; and PermRanker~\cite{bakas2026permranker} ranks many
+models in medical-imaging challenges with per-case ranks and pairwise permutation tests. These
+tools \emph{report} uncertainty for comparisons or rankings; ours turns it into a \emph{release
+decision} for one change, and audits that decision procedure itself.
+
+\textbf{Online experimentation.}
+A/B-testing practice separates success metrics from guardrails and checks the platform itself
+with A/A tests~\cite{kohavi2020trustworthy}. Schultzberg et~al.~\cite{schultzberg2024riskaware}
+formalize ``ship if superior on a success metric and non-inferior on every guardrail'', correcting
+false positives across success metrics and power across guardrails; our routing of guardrails
+outside the false-positive correction follows the same logic. Always-valid inference handles
+continuous monitoring~\cite{johari2022alwaysvalid}; our harness currently measures and warns about
+the inflation caused by REVIEW$\to$RETEST loops rather than correcting it.
+
+\textbf{Testing statistical and ML software.}
+A statistical tool has no per-run oracle: whether one verdict is right is unknown~\cite{barr2015oracle}.
+We therefore combine three oracle-free techniques---calibration against synthetic ground truth,
+metamorphic relations~\cite{segura2016metamorphic} (e.g.\ a batch of one must agree with a single
+audit), and differential testing~\cite{mckeeman1998differential} against closed-form and exact
+tests---in the spirit of ML testing~\cite{zhang2020mltesting} and of work on randomness-induced
+flakiness in probabilistic software~\cite{dutta2020flaky}. Applied to our own tool, they exposed six
+defects that ordinary unit tests had missed.
+
+\begin{table}[t]
+\centering
+\caption{Feature comparison. \checkmark: provided; --: not described in the cited source;
+$\circ$: partial (see text).}
+\label{tab:related}
+\footnotesize
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{@{}l c c c c c c c@{}}
+\toprule
+ & \rotatebox{70}{Paired items} & \rotatebox{70}{3-state verdict} & \rotatebox{70}{Guardrails (NI)}
+ & \rotatebox{70}{Multiplicity corr.} & \rotatebox{70}{Retest/sequential} & \rotatebox{70}{Sample-size plan}
+ & \rotatebox{70}{Self-audit} \\
+\midrule
+Miller~\cite{miller2024errorbars}              & \checkmark & --  & --  & --  & --  & \checkmark & --  \\
+evalci~\cite{evalci2026}                       & \checkmark & --  & --  & \checkmark & --  & \checkmark & $\circ$\textsuperscript{a} \\
+rliable~\cite{agarwal2021precipice}            & --  & --  & --  & --  & --  & --  & --  \\
+PermRanker~\cite{bakas2026permranker}          & \checkmark & --  & --  & --  & --  & --  & --  \\
+Risk-aware A/B~\cite{schultzberg2024riskaware} & --\textsuperscript{b} & --  & \checkmark & \checkmark & --  & \checkmark & --  \\
+\textbf{This tool}                             & \checkmark & \checkmark & \checkmark & \checkmark & $\circ$\textsuperscript{c} & \checkmark & \checkmark \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+\raggedright\scriptsize
+\textsuperscript{a}Routines checked against reference implementations, not calibrated end to end.
+\textsuperscript{b}Unpaired user-randomized experiments.
+\textsuperscript{c}Retests are counted and the measured inflation is shown; no sequential correction.
+\end{table}

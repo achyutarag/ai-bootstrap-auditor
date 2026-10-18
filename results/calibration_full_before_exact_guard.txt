@@ -1,0 +1,13 @@
+# Output of `python reproduce_paper.py --section calibration --full`, run 2026-10-17 BEFORE the
+# exact sign-test guard (Finding 6) was added. Kept for the "before guard" column of
+# paper/calibration_results_table.tex. Current code reproduces the "with guard" numbers instead.
+==============================================================================
+ Section 4.1 -- A/A false-positive rate and CI coverage (exact 99% bounds)
+   n_trials=2000, B=1000, true_p=0.7, effect_for_coverage=0.05
+==============================================================================
+  n=  20 rho=0.0  A/A GO rate  3.35% [2.40%, 4.53%] target 2.50% ok    coverage  94.2% [92.7%, 95.4%] ok
+  n=  20 rho=0.6  A/A GO rate  2.55% [1.73%, 3.60%] target 2.50% ok    coverage  92.2% [90.5%, 93.6%] OFF
+  n=  50 rho=0.0  A/A GO rate  2.40% [1.61%, 3.43%] target 2.50% ok    coverage  93.8% [92.3%, 95.1%] ok
+  n=  50 rho=0.6  A/A GO rate  2.50% [1.69%, 3.54%] target 2.50% ok    coverage  93.8% [92.3%, 95.2%] ok
+  n= 200 rho=0.0  A/A GO rate  2.55% [1.73%, 3.60%] target 2.50% ok    coverage  94.7% [93.3%, 95.9%] ok
+  n= 200 rho=0.6  A/A GO rate  2.35% [1.57%, 3.37%] target 2.50% ok    coverage  94.2% [92.7%, 95.5%] ok

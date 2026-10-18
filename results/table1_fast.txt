@@ -1,0 +1,10 @@
+
+==============================================================================
+ Table 1 -- required n (80% power, +3pt at 70% baseline) vs. closed-form oracle
+   n_trials_per_point=30, B=300, search=adaptive, start_n=500, seed=5
+==============================================================================
+  (fast mode: simulated n is noisy at n_trials=30; use --full for paper numbers)
+  latent rho=0.00  Pearson r=0.00  simulated n=3593  closed-form n=3550  (7s)
+  latent rho=0.30  Pearson r=0.18  simulated n=2906  closed-form n=2911  (9s)
+  latent rho=0.60  Pearson r=0.39  simulated n=2281  closed-form n=2158  (13s)
+  latent rho=0.85  Pearson r=0.63  simulated n=937  closed-form n=1311  (3s)

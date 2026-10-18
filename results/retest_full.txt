@@ -1,0 +1,10 @@
+
+==============================================================================
+ REVIEW -> RETEST under the null: P(eventually GO) vs. number of looks
+   n_trials=2000, start_n=100, increment=100, B=800, true_p=0.7
+==============================================================================
+  up to  1 looks:   1.6% [ 1.1%,  2.3%]   (nominal single look: 2.5%)
+  up to  2 looks:   2.8% [ 2.1%,  3.6%]   (nominal single look: 2.5%)
+  up to  3 looks:   3.0% [ 2.3%,  3.8%]   (nominal single look: 2.5%)
+  up to  5 looks:   4.9% [ 4.0%,  5.9%]   (nominal single look: 2.5%)
+  up to 10 looks:   8.6% [ 7.4%,  9.9%]   (nominal single look: 2.5%)

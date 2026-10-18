@@ -1,0 +1,11 @@
+
+==============================================================================
+ Section 4.1 -- A/A false-positive rate and CI coverage (exact 99% bounds)
+   n_trials=2000, B=1000, true_p=0.7, effect_for_coverage=0.05
+==============================================================================
+  n=  20 rho=0.0  A/A GO rate  1.30% [0.74%, 2.10%] target 2.50% OFF   coverage  94.2% [92.7%, 95.4%] ok
+  n=  20 rho=0.6  A/A GO rate  0.45% [0.16%, 1.00%] target 2.50% OFF   coverage  92.2% [90.5%, 93.6%] OFF
+  n=  50 rho=0.0  A/A GO rate  1.45% [0.85%, 2.29%] target 2.50% OFF   coverage  93.8% [92.3%, 95.1%] ok
+  n=  50 rho=0.6  A/A GO rate  0.95% [0.48%, 1.66%] target 2.50% OFF   coverage  93.8% [92.3%, 95.2%] ok
+  n= 200 rho=0.0  A/A GO rate  2.05% [1.32%, 3.01%] target 2.50% ok    coverage  94.7% [93.3%, 95.9%] ok
+  n= 200 rho=0.6  A/A GO rate  1.95% [1.24%, 2.89%] target 2.50% ok    coverage  94.2% [92.7%, 95.5%] ok
