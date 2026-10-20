@@ -318,9 +318,14 @@ def validation_suite_section():
                                      key="fwer_trials", help="More trials = more precise, slower to run.")
     fwer_n_comparisons = col2.number_input("Metrics per batch", min_value=2, max_value=20, value=5,
                                             key="fwer_n_comp")
-    if st.button("▶ Run FWER stress test", key="run_fwer"):
+    # ?demo=validation runs both live checks once on first load (paper / video link)
+    demo_run = st.query_params.get("demo") == "validation" and not st.session_state.get("validation_demo_done")
+    st.session_state["validation_demo_done"] = True
+    if st.button("▶ Run FWER stress test", key="run_fwer") or demo_run:
         with st.spinner(f"Simulating {fwer_trials} null batches of {fwer_n_comparisons} metrics each..."):
-            result = run_fwer_stress_test(n_comparisons=int(fwer_n_comparisons), n_trials=int(fwer_trials))
+            # the demo link is seeded so the paper figure is reproducible; clicks stay fresh
+            result = run_fwer_stress_test(n_comparisons=int(fwer_n_comparisons), n_trials=int(fwer_trials),
+                                          seed=2026 if demo_run else None)
         st.session_state["fwer_result"] = result
     result = st.session_state.get("fwer_result")
     if result:
@@ -331,9 +336,8 @@ def validation_suite_section():
             f"({result['uncorrected_false_batches']}/{result['n_trials']} batches)\n"
             f"  Corrected false-positive rate:   {result['corrected_fpr']:.1%} "
             f"({result['corrected_false_batches']}/{result['n_trials']} batches)\n"
-            f"  (Textbook theoretical uncorrected FWER at this batch size: "
-            f"{result['theoretical_uncorrected_fwer']:.1%} -- this run's empirical number will "
-            f"vary trial to trial, which is expected of a live simulation.)",
+            f"  Theoretical uncorrected FWER: {result['theoretical_uncorrected_fwer']:.1%}\n"
+            f"  (live simulation -- empirical rates vary from run to run)",
             language=None,
         )
     else:
@@ -346,7 +350,7 @@ def validation_suite_section():
     st.caption("Re-runs the exact failure modes discovered during this project's development "
                "(the bug that let a single data point produce a confident verdict) against the "
                "current codebase, live.")
-    if st.button("▶ Run edge-case validation suite", key="run_edgecases"):
+    if st.button("▶ Run edge-case validation suite", key="run_edgecases") or demo_run:
         with st.spinner("Running known-bad inputs through the auditor..."):
             cases = run_edge_case_validation_suite()
         st.session_state["edgecase_result"] = cases

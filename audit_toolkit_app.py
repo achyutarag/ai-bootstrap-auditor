@@ -26,6 +26,13 @@ from slow_path_cache import sample_size_planner_section, harness_calibration_sec
 
 st.set_page_config(page_title="AI Bootstrap Auditor", layout="wide")
 
+# Shareable demo links, used by the paper and video:
+#   ?demo=real_release -> Batch Review, real Mistral v0.1 -> v0.2 batch loaded and run
+#   ?demo=validation   -> Validation Suite with the live self-tests already run
+DEMO = st.query_params.get("demo")
+#   &static=1          -> plain HTML tables instead of interactive grids (paper screenshots)
+STATIC_TABLES = st.query_params.get("static") == "1"
+
 
 # =====================================================================
 # SHARED DATA-INPUT HELPER (used by tabs 1-3)
@@ -145,6 +152,10 @@ def render_results_table(df, single_metric=False):
         df["q-value"] = df["q-value"].apply(
             lambda v: "N/A -- only one metric tested" if pd.isna(v) else v
         )
+    if STATIC_TABLES:
+        # print mode (&static=1): plain HTML tables, rounded, for paper figures
+        st.table(df.round(4))
+        return
     column_config = {
         col: st.column_config.Column(help=COLUMN_HELP[col])
         for col in df.columns if col in COLUMN_HELP
@@ -467,6 +478,10 @@ def batch_review_tab():
         st.session_state.batch_metrics = []
     if "batch_guardrails" not in st.session_state:
         st.session_state.batch_guardrails = []
+    if DEMO == "real_release" and not st.session_state.get("demo_loaded"):
+        st.session_state.batch_metrics, st.session_state.batch_guardrails = _real_release_review_batch()
+        st.session_state.demo_loaded = True
+        st.session_state.demo_auto_run = True
 
     with st.expander("🎬 Load verified demo batch (for recording/presenting)"):
         st.caption(
@@ -548,8 +563,10 @@ def batch_review_tab():
 
     seed = _seed_control("batch")
     col1, col2 = st.columns([1, 1])
-    if col1.button("Run batch", type="primary",
-                    disabled=not (st.session_state.batch_metrics or st.session_state.batch_guardrails)):
+    run_clicked = col1.button("Run batch", type="primary",
+                              disabled=not (st.session_state.batch_metrics or st.session_state.batch_guardrails))
+    # One-click demo link (?demo=real_release): run once on first load, then behave normally.
+    if run_clicked or st.session_state.pop("demo_auto_run", False):
         batch = AuditBatch(correction_method=correction_method)
         for m in st.session_state.batch_metrics:
             batch.add_metric(m["name"], m["before"], m["after"], goal=m["goal"])
@@ -623,10 +640,10 @@ st.caption("The first three tabs answer that question for a result you already h
            "The last three are planning and self-validation tools -- deciding how much "
            "data to collect, and checking the tool's own statistical claims hold up.")
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-    "Single Metric Audit", "Guardrail Check", "Batch Review",
-    "Sample Size Planner", "Harness Calibration (Advanced)", "Validation Suite",
-])
+TAB_LABELS = ["Single Metric Audit", "Guardrail Check", "Batch Review",
+              "Sample Size Planner", "Harness Calibration (Advanced)", "Validation Suite"]
+DEMO_TABS = {"real_release": "Batch Review", "validation": "Validation Suite"}
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(TAB_LABELS, default=DEMO_TABS.get(DEMO))
 
 with tab1:
     single_metric_audit_tab()
