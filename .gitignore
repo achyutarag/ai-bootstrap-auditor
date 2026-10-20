@@ -8,3 +8,6 @@ reviews/
 __pycache__/
 .pytest_cache/
 *.pyc
+
+# build artifacts
+paper/overleaf_upload.zip
