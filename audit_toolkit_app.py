@@ -607,20 +607,21 @@ def batch_review_tab():
         # regressed core metric is a hard NO-GO regardless of anything
         # else; missing evidence anywhere is a HOLD, not a silent pass;
         # only a clean sweep is a GO.
-        core_statuses = [r["status"] for r in (results or [])]
-        guard_statuses = list(guard_df["Status"]) if not guard_df.empty else []
-
-        if "FAIL" in guard_statuses:
-            st.error("🔴 **Overall: NO-GO.** A guardrail confidently regressed beyond its allowed "
-                      "margin -- do not ship until that's addressed.")
-        elif "NO-GO" in core_statuses:
-            st.error("🔴 **Overall: NO-GO.** A core metric confidently regressed -- do not ship "
-                      "until that's addressed.")
-        elif "INCONCLUSIVE" in guard_statuses or "REVIEW" in core_statuses:
+        # Same rule as AuditBatch.decision(), which CI gates use; the banner adds wording only.
+        if results is None:
+            pass
+        elif batch.decision()["decision"] == "NO-GO":
+            if any(g["status"] == "FAIL" for g in batch.guardrail_results):
+                st.error("🔴 **Overall: NO-GO.** A guardrail confidently regressed beyond its allowed "
+                          "margin -- do not ship until that's addressed.")
+            else:
+                st.error("🔴 **Overall: NO-GO.** A core metric confidently regressed -- do not ship "
+                          "until that's addressed.")
+        elif batch.decision()["decision"] == "HOLD":
             st.warning("🟡 **Overall: HOLD -- decision pending.** No confirmed regressions, but one "
                        "or more metrics don't have enough evidence yet. Collect more data or retest "
                        "before shipping.")
-        elif core_statuses or guard_statuses:
+        else:
             st.success("🟢 **Overall: GO.** No regressions detected across any guardrail, and any "
                        "core metrics tested show a confirmed improvement.")
 

@@ -654,7 +654,37 @@ class AuditBatch:
                 guard.print_executive_report(g_result)
 
         self._last_guardrail_results = guardrail_results
+        self._last_results = results
         return results
+
+    @property
+    def guardrail_results(self) -> list:
+        """Guardrail results from the most recent run() (empty before the first run)."""
+        return list(getattr(self, "_last_guardrail_results", []))
+
+    def decision(self) -> dict:
+        """
+        Overall release decision for the most recent run(), worst case first:
+          NO-GO  if any guardrail FAILs or any core metric is NO-GO;
+          HOLD   if any guardrail is INCONCLUSIVE or any core metric is REVIEW;
+          GO     only on a clean sweep.
+        Returns {"decision": ..., "reasons": [...]}. The app's summary banner and CI gates use
+        this same rule, so the two cannot drift apart.
+        """
+        if not hasattr(self, "_last_results"):
+            raise RuntimeError("Call run() before decision().")
+        core, guards = self._last_results, self.guardrail_results
+        failed = [g["metric"] for g in guards if g["status"] == "FAIL"]
+        regressed = [r["metric"] for r in core if r["status"] == "NO-GO"]
+        pending = ([g["metric"] for g in guards if g["status"] == "INCONCLUSIVE"]
+                   + [r["metric"] for r in core if r["status"] == "REVIEW"])
+        if failed or regressed:
+            reasons = ([f"guardrail failed: {m}" for m in failed]
+                       + [f"core metric regressed: {m}" for m in regressed])
+            return {"decision": "NO-GO", "reasons": reasons}
+        if pending:
+            return {"decision": "HOLD", "reasons": [f"not enough evidence: {m}" for m in pending]}
+        return {"decision": "GO", "reasons": []}
 
     def to_dataframe(self, results: list) -> pd.DataFrame:
         """

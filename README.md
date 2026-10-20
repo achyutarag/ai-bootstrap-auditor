@@ -73,6 +73,14 @@ defect, not only to pass on the fix. `tests/test_metamorphic.py` holds invariant
 (a batch of one equals a single audit; correction never demotes a NO-GO or adds a GO; goal-mirror and
 unit-change invariance).
 
+### Use as a CI release gate
+
+`examples/test_release_gate.py` is a pytest test that fails the build unless a batch of metrics and
+guardrails is a clean GO; `AuditBatch.decision()` returns `GO` / `HOLD` / `NO-GO` plus the reasons
+(the app's summary banner uses the same rule). The example itself is tested in
+`tests/test_ci_example.py`: on the real Mistral GSM8K data it blocks the release because answers grew
+far beyond the 2.9-word guardrail.
+
 ### Real-data case study (Mistral-7B-Instruct v0.1 → v0.2)
 
 ```bash
