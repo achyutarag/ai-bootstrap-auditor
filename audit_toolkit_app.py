@@ -29,6 +29,8 @@ st.set_page_config(page_title="AI Bootstrap Auditor", layout="wide")
 # Shareable demo links, used by the paper and video:
 #   ?demo=real_release -> Batch Review, real Mistral v0.1 -> v0.2 batch loaded and run
 #   ?demo=validation   -> Validation Suite with the live self-tests already run
+#   ?demo=small_eval   -> Single Metric Audit on the real MMLU business-ethics subset (n=100)
+#   ?demo=planner      -> Sample Size Planner, computed with the defaults
 DEMO = st.query_params.get("demo")
 #   &static=1          -> plain HTML tables instead of interactive grids (paper screenshots)
 STATIC_TABLES = st.query_params.get("static") == "1"
@@ -311,7 +313,15 @@ def data_input_widget(key_prefix: str, context: str = "metric") -> tuple:
 # =====================================================================
 # TAB 1: SINGLE METRIC AUDIT (fast path)
 # =====================================================================
+SMALL_EVAL_SCENARIO = "REAL: Mistral v0.1 -> v0.2, MMLU business ethics (n=100, +8 pts)"
+
+
 def single_metric_audit_tab():
+    # ?demo=small_eval: preselect the real small-eval example once (must run before the widgets)
+    if DEMO == "small_eval" and not st.session_state.get("small_eval_demo_done"):
+        st.session_state["sma_method"] = "Example scenario"
+        st.session_state["sma_scenario"] = SMALL_EVAL_SCENARIO
+        st.session_state["small_eval_demo_done"] = True
     st.subheader("Single Metric Audit")
     st.caption("Is this metric a real win, or could it be noise? Updates instantly as you change inputs.")
 
@@ -650,7 +660,8 @@ st.caption("The first three tabs answer that question for a result you already h
 
 TAB_LABELS = ["Single Metric Audit", "Guardrail Check", "Batch Review",
               "Sample Size Planner", "Harness Calibration (Advanced)", "Validation Suite"]
-DEMO_TABS = {"real_release": "Batch Review", "validation": "Validation Suite"}
+DEMO_TABS = {"real_release": "Batch Review", "validation": "Validation Suite",
+             "small_eval": "Single Metric Audit", "planner": "Sample Size Planner"}
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(TAB_LABELS, default=DEMO_TABS.get(DEMO))
 
 with tab1:

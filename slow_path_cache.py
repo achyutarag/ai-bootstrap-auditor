@@ -140,6 +140,11 @@ def sample_size_planner_section():
 
     button_col, recompute_col = st.columns([1, 1])
     run_clicked = button_col.button("Compute required sample size", type="primary")
+    # ?demo=planner computes once on first load with the defaults; the result is cached
+    # (st.cache_data), so after one warm-up visit it appears instantly
+    if st.query_params.get("demo") == "planner" and not st.session_state.get("planner_demo_done"):
+        st.session_state["planner_demo_done"] = True
+        run_clicked = True
     recompute_clicked = recompute_col.button("🔄 Force recompute (fresh simulation)")
 
     if recompute_clicked:
