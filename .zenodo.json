@@ -1,0 +1,10 @@
+{
+  "title": "AI Bootstrap Auditor: a self-testing statistical harness for AI release decisions",
+  "upload_type": "software",
+  "creators": [
+    {"name": "Raghunathan, Achyuta", "affiliation": "University of California, Irvine"}
+  ],
+  "description": "Paired-bootstrap GO / REVIEW-RETEST / NO-GO verdicts for AI evaluation metrics, non-inferiority guardrails, batch multiple-comparison correction, sample-size planning, and a self-audit suite (calibration, metamorphic and differential tests). Includes a Streamlit app, a CI release-gate API, and a real-data case study (Mistral-7B-Instruct v0.1 to v0.2). Live app: https://ai-bootstrap-auditor.streamlit.app",
+  "license": "MIT",
+  "keywords": ["AI evaluation", "statistical testing", "bootstrap", "release engineering", "metamorphic testing", "LLM"]
+}

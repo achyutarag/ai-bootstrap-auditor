@@ -5,6 +5,8 @@
 
 **Live app:** https://ai-bootstrap-auditor.streamlit.app (no install needed)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23524033.svg)](https://doi.org/10.5281/zenodo.23524033)
+
 A statistical auditing tool for AI/ML evaluation results. Paste before/after numbers in, get a plain-English verdict — backed by paired bootstrap resampling implemented from scratch, not a black-box stats library — instead of a raw p-value nobody on a cross-functional team can interpret.
 
 ---
