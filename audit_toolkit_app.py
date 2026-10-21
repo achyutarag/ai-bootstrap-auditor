@@ -272,6 +272,8 @@ def data_input_widget(key_prefix: str, context: str = "metric") -> tuple:
             st.info("Select a scenario, or switch to Upload/Paste for real data.")
             return None, None
         before, after = _generate_example(spec)
+        # Each built-in example is its own comparison: switching examples is not a retest.
+        st.session_state[f"{key_prefix}_source"] = f"example:{choice}"
 
     elif method == "Upload CSV":
         st.caption("CSV must have two columns named exactly 'before' and 'after', same length, paired by row.")
@@ -300,6 +302,9 @@ def data_input_widget(key_prefix: str, context: str = "metric") -> tuple:
             st.error("Couldn't parse values -- check for stray characters.")
             return None, None
 
+    if method != "Example scenario":
+        # the user's own data: new values under the same metric name ARE a retest
+        st.session_state[f"{key_prefix}_source"] = "user"
     return _validate_and_clean(before, after)
 
 
@@ -329,7 +334,8 @@ def single_metric_audit_tab():
         status_widget(f"**{result['verdict']}**")
         render_results_table(AIBootstrapAuditor.to_dataframe(result), single_metric=True)
         st.caption(result["risk_statement"])
-        show_reliability_warnings(result, f"metric::{metric_name}::{goal}", before, after)
+        show_reliability_warnings(result, f"metric::{metric_name}::{goal}::{st.session_state.get('sma_source')}",
+                                  before, after)
 
 
 # =====================================================================
@@ -367,7 +373,8 @@ def guardrail_check_tab():
         status_widget(f"**{result['verdict']}**")
         render_results_table(GuardrailAuditor.to_dataframe(result))
         st.caption(result["risk_statement"])
-        show_reliability_warnings(result, f"guardrail::{metric_name}::{guard_direction}::{margin}",
+        show_reliability_warnings(result, f"guardrail::{metric_name}::{guard_direction}::{margin}::"
+                                          f"{st.session_state.get('grc_source')}",
                                   before, after)
 
 
