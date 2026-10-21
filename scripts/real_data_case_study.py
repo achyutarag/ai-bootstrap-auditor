@@ -136,7 +136,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     B, reps = (1000, 200) if args.fast else (4000, 1000)
     data = pd.read_csv(PAIRED)
-    print(f"data: {PAIRED} ({len(data):,} paired questions)")
+    n_questions = (data.metric != "response_words").sum()  # answer length re-measures GSM8K items
+    print(f"data: {PAIRED} ({n_questions:,} paired questions; {len(data):,} rows incl. GSM8K answer length)")
     section_a(data, B)
     section_b(data)
     section_c(data, B)

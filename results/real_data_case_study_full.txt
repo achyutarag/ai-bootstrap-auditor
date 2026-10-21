@@ -1,4 +1,4 @@
-data: C:\Users\stats\OneDrive\Desktop\AI_ROI_Validator_submission\data\mistral_v01_v02_paired.csv (29,978 paired questions)
+data: C:\Users\stats\OneDrive\Desktop\AI_ROI_Validator_submission\data\mistral_v01_v02_paired.csv (28,659 paired questions; 29,978 rows incl. GSM8K answer length)
 
 ======================================================================================
  A. Release review: Mistral-7B-Instruct v0.1 -> v0.2 (B=4000, BH, seed=1)
