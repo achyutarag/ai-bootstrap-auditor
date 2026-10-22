@@ -121,8 +121,13 @@ def sample_size_planner_section():
                "Nothing runs until you click -- this can take a few seconds to a minute.")
 
     col1, col2, col3 = st.columns(3)
-    true_p_before = col1.number_input("Current baseline rate", 0.0, 1.0, 0.70, step=0.01)
-    effect_size = col2.number_input("Target effect size (+)", 0.0, 1.0, 0.05, step=0.01)
+    # ?demo=planner starts from the real small-eval example (MMLU business ethics: 52% -> 60%),
+    # so the planner answers "how much data would confirm THIS gain?"
+    demo_planner = st.query_params.get("demo") == "planner"
+    true_p_before = col1.number_input("Current baseline rate", 0.0, 1.0, 0.52 if demo_planner else 0.70,
+                                      step=0.01)
+    effect_size = col2.number_input("Target effect size (+)", 0.0, 1.0, 0.08 if demo_planner else 0.05,
+                                    step=0.01)
     target_power = col3.number_input("Target power", 0.0, 1.0, 0.80, step=0.05)
 
     col4, col5, col6 = st.columns(3)
