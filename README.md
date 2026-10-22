@@ -56,7 +56,7 @@ slow_path_cache.py        Streamlit UI — slow/cached tabs (Sample Size Planner
 ## Running it locally
 
 ```bash
-pip install streamlit pandas numpy
+pip install -r requirements.txt
 streamlit run audit_toolkit_app.py
 ```
 
