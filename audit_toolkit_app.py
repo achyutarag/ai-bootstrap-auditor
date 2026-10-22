@@ -72,7 +72,7 @@ EXAMPLE_SCENARIOS = {
         "spec": {"kind": "real", "group": "winogrande", "metric": "acc"},
         "contexts": {"metric"},
     },
-    "REAL: Mistral v0.1 -> v0.2, MMLU business ethics (n=100, +8 pts)": {
+    "REAL: Mistral v0.1 -> v0.2, MMLU business ethics (n=100, 52% -> 60% correct)": {
         "spec": {"kind": "real", "task": "hendrycksTest-business_ethics", "metric": "acc"},
         "contexts": {"metric"},
     },
@@ -313,7 +313,7 @@ def data_input_widget(key_prefix: str, context: str = "metric") -> tuple:
 # =====================================================================
 # TAB 1: SINGLE METRIC AUDIT (fast path)
 # =====================================================================
-SMALL_EVAL_SCENARIO = "REAL: Mistral v0.1 -> v0.2, MMLU business ethics (n=100, +8 pts)"
+SMALL_EVAL_SCENARIO = "REAL: Mistral v0.1 -> v0.2, MMLU business ethics (n=100, 52% -> 60% correct)"
 
 
 def single_metric_audit_tab():
