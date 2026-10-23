@@ -1,4 +1,4 @@
-# AI-ROI-Validator
+# AI Bootstrap Auditor
 
 
 **Is this AI metric change a real win, or just noise?**
